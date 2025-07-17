@@ -9,7 +9,7 @@ import Foundation
 
 protocol ViewModelProtocol: ObservableObject {
     associatedtype Item: ItemProtocol
-    associatedtype Service //TODO: - add service protocol
+    associatedtype Service: ServiceProtocol
     
     var items: [Item] { get }
     var publisher: Published<[Item]>.Publisher { get }
