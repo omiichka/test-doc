@@ -6,40 +6,28 @@
 //
 
 import UIKit
+import Combine
 
-final class NewsView<Item: ItemProtocol, Cell: CellProtocol>: UIView, ViewProtocol where Cell.Item == Item {
-
-    private enum Section { case main }
-
+final class NewsView<Adapter: ViewAdapterProtocol>: UIView, ViewProtocol {
+    
+    var adapter: Adapter
+  
     private lazy var collectionView: UICollectionView = {
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .systemBackground
-        view.register(Cell.self, forCellWithReuseIdentifier: "\(Cell.self)")
         return view
     }()
 
-    private lazy var dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { view, path, item in
-        let cell = view.dequeueReusableCell(withReuseIdentifier: "\(Cell.self)", for: path)
-        guard let castedCell = cell as? Cell else { return UICollectionViewCell() }
-        castedCell.update(with: item)
-        return castedCell
-    }
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(adapter: Adapter) {
+        self.adapter = adapter
+        super.init(frame: .zero)
         setupUI()
+        adapter.connect(with: collectionView)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    func update(with items: [Item]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(items)
-        dataSource.apply(snapshot, animatingDifferences: true)
     }
 }
 

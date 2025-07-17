@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-final class NewsViewController<View: ViewProtocol, ViewModel: ViewModelProtocol>: UIViewController, ViewControllerProtocol where View.Item == ViewModel.Item {
+final class NewsViewController<View: ViewProtocol, ViewModel: ViewModelProtocol>: UIViewController, ViewControllerProtocol where View.Adapter.Item == ViewModel.Item {
     
     let contentView: View
     let viewModel: ViewModel
@@ -56,7 +56,16 @@ private extension NewsViewController {
             .publisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] items in
-                self?.contentView.update(with: items)
+                self?.contentView.adapter.update(with: items)
+            }
+            .store(in: &bag)
+        
+        contentView
+            .adapter
+            .selectionPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] item in
+               
             }
             .store(in: &bag)
     }

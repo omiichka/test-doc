@@ -8,8 +8,8 @@
 import UIKit
 
 protocol ViewProtocol: UIView {
-    associatedtype Item: ItemProtocol
-    associatedtype Cell: CellProtocol
+    associatedtype Adapter: ViewAdapterProtocol
     
-    func update(with items: [Item])
+    var adapter: Adapter { get }
+    
 }
