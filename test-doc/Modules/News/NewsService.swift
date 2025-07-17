@@ -13,7 +13,7 @@ struct NewsService<Response: Decodable>: ServiceProtocol {
         let urlString = "\(urlString)\(page)/\(count)"
         guard let url = URL(string: urlString) else { throw ServiceError.invalidURL(urlString) }
         do {
-            let (data, urlResponse) = try await URLSession.shared.data(from: url)
+            let (data, urlResponse) = try await PinnedSessionProvider.shared.session.data(from: url)
             guard let httpResponse = urlResponse as? HTTPURLResponse else { throw ServiceError.castError(urlString) }
             guard (200..<300).contains(httpResponse.statusCode) else { throw ServiceError.requestError(httpResponse.statusCode) }
             do {
