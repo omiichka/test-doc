@@ -11,5 +11,4 @@ protocol ViewProtocol: UIView {
     associatedtype Adapter: ViewAdapterProtocol
     
     var adapter: Adapter { get }
-    
 }

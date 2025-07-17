@@ -13,4 +13,5 @@ protocol MapperProtocol {
 
     func map(response: Response) -> [Item]
     func totalCount(from response: Response) -> Int
+    func mapWithImages(items: [Item], callback: @escaping(URL) async throws -> Data?) async -> [Item]
 }

@@ -8,6 +8,6 @@
 import UIKit
 
 protocol BuilderProtocol {
-    static func build() -> UIViewController
+    var controller: UIViewController { get }
 }
 

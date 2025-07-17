@@ -7,9 +7,10 @@
 
 import Foundation
 
-typealias ItemType = Codable & Hashable
+typealias ItemType = Codable & Hashable & Identifiable
 
-protocol ItemProtocol: ItemType {
-    var viewTitle: String { get }
-    var viewURL: String { get }
+protocol ItemProtocol: ItemType where ID == Int {
+    var cellTitle: String { get }
+    var imageData: Data? { get set }
+    var webviewURL: URL { get }
 }
