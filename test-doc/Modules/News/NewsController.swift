@@ -25,32 +25,21 @@ final class NewsViewController<View: ViewProtocol, ViewModel: ViewModelProtocol>
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func loadView() {
+        super.loadView()
+        view = contentView
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
+        title = "Новости"
         bindViewModel()
         viewModel.fetch()
-//        viewModel.fetchMockData()
     }
-
-
 }
 
 private extension NewsViewController {
     
-    func setupUI() {
-        title = "Новости"
-        view.backgroundColor = .systemBackground
-        view.addSubview(contentView)
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            contentView.topAnchor.constraint(equalTo: view.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-    }
-
     func bindViewModel() {
         viewModel
             .publisher
@@ -65,9 +54,16 @@ private extension NewsViewController {
             .selectionPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] item in
-               
+                self?.showWebView(with: item.webviewURL)
             }
             .store(in: &bag)
+    }
+    
+    func showWebView(with url: URL) {
+        let controller = WebViewController(url: url)
+        let navigation = UINavigationController(rootViewController: controller)
+        navigation.modalPresentationStyle = .fullScreen
+        present(navigation, animated: true)
     }
 }
 

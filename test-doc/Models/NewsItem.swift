@@ -16,15 +16,21 @@ struct NewsItem {
     let fullUrl: URL
     let titleImageUrl: URL
     let categoryType: String
+    
+    var imageData: Data? = nil
+}
+
+extension NewsItem {
+    
+    func copy(with data: Data?) -> NewsItem {
+        var copy = self
+        copy.imageData = data
+        return copy
+    }
 }
 
 extension NewsItem: ItemProtocol {
     
-    var viewTitle: String {
-        title
-    }
-    
-    var viewURL: String {
-        url
-    }
+    var cellTitle: String { title }
+    var webviewURL: URL { fullUrl }
 }

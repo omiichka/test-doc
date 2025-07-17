@@ -9,7 +9,7 @@ import UIKit
 
 struct NewsBuilder: BuilderProtocol {
     
-    static func build() -> UIViewController {
+    var controller: UIViewController {
         let mapper = NewsMapper()
         let service = NewsService<NewsResponse>()
         let adapter = NewsViewAdapter<NewsItem, NewsCell<NewsItem>>()

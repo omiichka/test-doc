@@ -11,11 +11,11 @@ final class NewsCell<Item: ItemProtocol>: UICollectionViewCell, CellProtocol {
     
     private let titleLabel = UILabel()
     private let imageView = UIImageView()
+    private let stackView = UIStackView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
-        layout()
     }
 
     required init?(coder: NSCoder) {
@@ -23,41 +23,54 @@ final class NewsCell<Item: ItemProtocol>: UICollectionViewCell, CellProtocol {
     }
     
     func update(with item: Item) {
-        titleLabel.text = item.viewTitle
+        titleLabel.text = item.cellTitle
+        imageView.image = getImage(from: item.imageData)
     }
 }
 
 private extension NewsCell {
     
     func setupUI() {
-        titleLabel.font = .systemFont(ofSize: 14, weight: .regular)
-        titleLabel.textColor = .black
-        titleLabel.numberOfLines = 1
+        contentView.backgroundColor = .dark
+        contentView.layer.cornerRadius = 12
+        contentView.clipsToBounds = true
+
+        titleLabel.font = .preferredFont(forTextStyle: .headline)
+        titleLabel.textColor = .text
+        titleLabel.numberOfLines = 0
         titleLabel.lineBreakMode = .byTruncatingTail
-        titleLabel.textAlignment = .left
+        titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        imageView.layer.cornerRadius = 4
+        imageView.layer.cornerRadius = 10
         imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         
-        backgroundColor = .secondarySystemBackground
-        layer.cornerRadius = 10
+        backgroundColor = .bg
+        layer.cornerRadius = 4
         layer.masksToBounds = true
-    }
-    
-    func layout() {
-        let stack = UIStackView(arrangedSubviews: [imageView, titleLabel])
-        stack.axis = .vertical
-        stack.spacing = 4
-
-        addSubview(stack)
-        stack.translatesAutoresizingMaskIntoConstraints = false
+        
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(imageView)
+        
         NSLayoutConstraint.activate([
-            stack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-            stack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-            stack.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            stack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8)
+            imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -35),
+
+            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 5),
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5)
         ])
+
+    }
+        
+    func getImage(from data: Data?) -> UIImage {
+        guard let data, let image = UIImage(data: data) else { return UIImage(systemName: "photo") ?? .remove }
+        return image
     }
 }
 

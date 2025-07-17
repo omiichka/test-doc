@@ -20,6 +20,7 @@ final class NewsViewModel<Item: ItemProtocol, Service: ServiceProtocol, Mapper: 
     
     private let service: Service
     private let mapper: Mapper
+    private let urlString = "https://webapi.autodoc.ru/api/news/"
     
     private var totalCount = 0
     private var currentPage = 1
@@ -33,18 +34,19 @@ final class NewsViewModel<Item: ItemProtocol, Service: ServiceProtocol, Mapper: 
    
     
     func fetch() {
-        guard !isLoading else { return }
         isLoading = true
-        
         Task {
             defer { isLoading = false }
             do {
-                let response = try await service.fetch(urlString: "https://webapi.autodoc.ru/api/news/", page: currentPage, count: pageSize)
+                let response = try await service.fetch(urlString: urlString, page: currentPage, count: pageSize)
                 let items = mapper.map(response: response)
                 let totalCount = mapper.totalCount(from: response)
+                let mappedItems = await mapper.mapWithImages(items: items) { [weak self] in
+                    try await self?.service.loadData(from: $0)
+                }.sorted(by: { $0.id > $1.id })
                 await MainActor.run {
                     self.totalCount = totalCount
-                    self.items += items
+                    self.items += mappedItems
                     currentPage += 1
                 }
             } catch {
