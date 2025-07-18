@@ -16,7 +16,7 @@ struct NewsMapper: MapperProtocol {
         response.totalCount
     }
     
-    func mapWithImages(items: [NewsItem], callback: @escaping(URL) async throws -> Data?) async -> [NewsItem] {
+    func mapWithImages(items: [NewsItem], callback: @escaping MapperCallback) async -> [NewsItem] {
         await withTaskGroup(of: NewsItem.self) { group in
             for item in items {
                 group.addTask {

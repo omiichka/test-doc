@@ -12,6 +12,7 @@ protocol ViewAdapterProtocol: AnyObject {
     associatedtype Item: ItemProtocol
     
     var selectionPublisher: PassthroughSubject<Item, Never> { get }
+    var bottomScrollPublisher: PassthroughSubject<Void, Never> { get }
     
     func connect(with collectionView: UICollectionView)
     func update(with items: [Item])

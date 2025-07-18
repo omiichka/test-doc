@@ -23,8 +23,14 @@ final class NewsCell<Item: ItemProtocol>: UICollectionViewCell, CellProtocol {
     }
     
     func update(with item: Item) {
-        titleLabel.text = item.cellTitle
-        imageView.image = getImage(from: item.imageData)
+        if item.isEmpty {
+            showSkeleton()
+        } else {
+            hideSkeleton()
+            titleLabel.text = item.cellTitle
+            imageView.image = getImage(from: item.imageData)
+        }
+       
     }
 }
 
@@ -69,8 +75,24 @@ private extension NewsCell {
     }
         
     func getImage(from data: Data?) -> UIImage {
-        guard let data, let image = UIImage(data: data) else { return UIImage(systemName: "photo") ?? .remove }
+        guard let data, let image = UIImage(data: data) else { return .no }
         return image
+    }
+    
+    func showSkeleton() {
+        stackView.backgroundColor = .lightGray.withAlphaComponent(0.5)
+        let animation = CABasicAnimation(keyPath: "opacity")
+        animation.fromValue = 1
+        animation.toValue = 0.5
+        animation.duration = 0.75
+        animation.autoreverses = true
+        animation.repeatCount = .infinity
+        layer.add(animation, forKey: "animation")
+    }
+    
+    func hideSkeleton() {
+        stackView.backgroundColor = .clear
+        layer.removeAnimation(forKey: "animation")
     }
 }
 

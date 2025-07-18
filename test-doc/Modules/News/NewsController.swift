@@ -57,9 +57,18 @@ private extension NewsViewController {
                 self?.showWebView(with: item.webviewURL)
             }
             .store(in: &bag)
+        
+        contentView
+            .adapter
+            .bottomScrollPublisher
+            .sink { [weak self] in
+                self?.viewModel.fetch()
+            }
+            .store(in: &bag)
     }
     
-    func showWebView(with url: URL) {
+    func showWebView(with url: URL?) {
+        guard let url else { return } //?
         let controller = WebViewController(url: url)
         let navigation = UINavigationController(rootViewController: controller)
         navigation.modalPresentationStyle = .fullScreen

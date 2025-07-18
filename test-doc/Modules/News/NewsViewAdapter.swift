@@ -15,6 +15,7 @@ final class NewsViewAdapter<Item: ItemProtocol, Cell: CellProtocol>: NewsViewAda
     enum Section { case main }
     
     var selectionPublisher: PassthroughSubject<Item, Never> = .init()
+    var bottomScrollPublisher: PassthroughSubject<Void, Never> = .init()
 
     private weak var collectionView: UICollectionView?
 
@@ -23,6 +24,13 @@ final class NewsViewAdapter<Item: ItemProtocol, Cell: CellProtocol>: NewsViewAda
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let item = dataSource?.itemIdentifier(for: indexPath) else { return }
         selectionPublisher.send(item)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        guard let totalItems = dataSource?.snapshot().itemIdentifiers.count,
+              indexPath.row >= totalItems - 1
+        else { return }
+        bottomScrollPublisher.send()
     }
 }
 

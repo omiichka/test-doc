@@ -12,5 +12,5 @@ protocol ServiceProtocol {
     
     func fetch(urlString: String, page: Int, count: Int) async throws -> Response
     
-    func loadData(from url: URL) async throws -> Data?
+    func loadData(from url: URL?) async throws -> Data?
 }

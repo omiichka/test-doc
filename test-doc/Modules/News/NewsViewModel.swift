@@ -30,6 +30,8 @@ final class NewsViewModel<Item: ItemProtocol, Service: ServiceProtocol, Mapper: 
     init(service: Service, mapper: Mapper) {
         self.service = service
         self.mapper = mapper
+        
+        items = Item.mock()
     }
    
     
@@ -45,9 +47,10 @@ final class NewsViewModel<Item: ItemProtocol, Service: ServiceProtocol, Mapper: 
                     try await self?.service.loadData(from: $0)
                 }.sorted(by: { $0.id > $1.id })
                 await MainActor.run {
+                    removeMock()
+                    currentPage += 1
                     self.totalCount = totalCount
                     self.items += mappedItems
-                    currentPage += 1
                 }
             } catch {
                 debugPrint(error.localizedDescription)
@@ -56,3 +59,10 @@ final class NewsViewModel<Item: ItemProtocol, Service: ServiceProtocol, Mapper: 
     }
 }
 
+private extension NewsViewModel {
+    
+    func removeMock() {
+        guard currentPage == 1 else { return }
+        items = []
+    }
+}
