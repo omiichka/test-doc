@@ -15,6 +15,7 @@ final class NewsCell<Item: ItemProtocol>: UICollectionViewCell, CellProtocol {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        layout()
     }
 
     required init?(coder: NSCoder) {
@@ -88,4 +89,3 @@ private extension NewsCell {
         layer.removeAnimation(forKey: "animation")
     }
 }
-

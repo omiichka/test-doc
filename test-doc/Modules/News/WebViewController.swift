@@ -14,8 +14,6 @@ final class WebViewController: UIViewController {
     private let url: URL
     
     private let activity = UIActivityIndicatorView(style: .large)
-
-
     
     init(url: URL) {
         self.url = url
@@ -35,7 +33,6 @@ final class WebViewController: UIViewController {
     
     private func setupUI() {
         title = "Просмотр"
-        
         webView.navigationDelegate = self
         activity.hidesWhenStopped = true
         activity.color = .gray
@@ -53,7 +50,6 @@ final class WebViewController: UIViewController {
             target: self,
             action: #selector(dismissModal)
         )
-        
     }
     
     @objc

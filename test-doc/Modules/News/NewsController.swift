@@ -27,25 +27,33 @@ final class NewsViewController<View: ViewProtocol, ViewModel: ViewModelProtocol>
     
     override func loadView() {
         super.loadView()
+        title = "Новости"
         view = contentView
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Новости"
-        bindViewModel()
+        bind()
         viewModel.fetch()
     }
 }
 
 private extension NewsViewController {
     
-    func bindViewModel() {
+    func bind() {
         viewModel
-            .publisher
+            .itemPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] items in
                 self?.contentView.adapter.update(with: items)
+            }
+            .store(in: &bag)
+        
+        viewModel
+            .loadPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                isLoading ? self?.contentView.startLoader() : self?.contentView.stopLoader()
             }
             .store(in: &bag)
         
@@ -75,4 +83,3 @@ private extension NewsViewController {
         present(navigation, animated: true)
     }
 }
-

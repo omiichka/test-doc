@@ -11,7 +11,10 @@ protocol ViewModelProtocol: ObservableObject {
     associatedtype Item: ItemProtocol
     
     var items: [Item] { get }
-    var publisher: Published<[Item]>.Publisher { get }
+    var isLoading: Bool { get }
+    
+    var itemPublisher: Published<[Item]>.Publisher { get }
+    var loadPublisher: Published<Bool>.Publisher { get }
     
     func fetch()
 }

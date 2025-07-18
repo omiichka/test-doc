@@ -10,4 +10,3 @@ import UIKit
 protocol BuilderProtocol {
     var controller: UIViewController { get }
 }
-

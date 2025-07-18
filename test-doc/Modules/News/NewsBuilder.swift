@@ -19,4 +19,3 @@ struct NewsBuilder: BuilderProtocol {
         return controller
     }
 }
-

@@ -16,7 +16,8 @@ final class NewsViewModel<Item: ItemProtocol, Service: ServiceProtocol, Mapper: 
     @Published
     var items: [Item] = []
     
-    var publisher: Published<[Item]>.Publisher { $items }
+    var itemPublisher: Published<[Item]>.Publisher { $items }
+    var loadPublisher: Published<Bool>.Publisher { $isLoading }
     
     private let service: Service
     private let mapper: Mapper
