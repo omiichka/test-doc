@@ -11,7 +11,6 @@ final class NewsCell<Item: ItemProtocol>: UICollectionViewCell, CellProtocol {
     
     private let titleLabel = UILabel()
     private let imageView = UIImageView()
-    private let stackView = UIStackView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -30,48 +29,44 @@ final class NewsCell<Item: ItemProtocol>: UICollectionViewCell, CellProtocol {
             titleLabel.text = item.cellTitle
             imageView.image = getImage(from: item.imageData)
         }
-       
     }
 }
 
 private extension NewsCell {
     
     func setupUI() {
+        backgroundColor = .bg
         contentView.backgroundColor = .dark
-        contentView.layer.cornerRadius = 12
-        contentView.clipsToBounds = true
-
+        contentView.layer.cornerRadius = 10
+        
         titleLabel.font = .preferredFont(forTextStyle: .headline)
         titleLabel.textColor = .text
         titleLabel.numberOfLines = 0
+        titleLabel.adjustsFontSizeToFitWidth = true
+        titleLabel.minimumScaleFactor = 0.8
         titleLabel.lineBreakMode = .byTruncatingTail
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        imageView.layer.cornerRadius = 10
-        imageView.clipsToBounds = true
-        imageView.contentMode = .scaleAspectFill
+
+        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        
-        backgroundColor = .bg
-        layer.cornerRadius = 4
-        layer.masksToBounds = true
         
         contentView.addSubview(titleLabel)
         contentView.addSubview(imageView)
-        
+    }
+    
+    func layout() {
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -35),
+            imageView.heightAnchor.constraint(lessThanOrEqualToConstant: 250),
 
-            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 5),
+            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 10),
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5)
+            titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -7)
         ])
-
     }
         
     func getImage(from data: Data?) -> UIImage {
@@ -80,18 +75,16 @@ private extension NewsCell {
     }
     
     func showSkeleton() {
-        stackView.backgroundColor = .lightGray.withAlphaComponent(0.5)
         let animation = CABasicAnimation(keyPath: "opacity")
         animation.fromValue = 1
-        animation.toValue = 0.5
-        animation.duration = 0.75
+        animation.toValue = 0.65
+        animation.duration = 0.65
         animation.autoreverses = true
         animation.repeatCount = .infinity
         layer.add(animation, forKey: "animation")
     }
     
     func hideSkeleton() {
-        stackView.backgroundColor = .clear
         layer.removeAnimation(forKey: "animation")
     }
 }

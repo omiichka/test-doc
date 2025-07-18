@@ -12,13 +12,17 @@ final class NewsView<Adapter: ViewAdapterProtocol>: UIView, ViewProtocol {
     
     var adapter: Adapter
   
-    private lazy var collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: layout)
+    private lazy var collectionView: UICollectionView = {
+       let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collection.backgroundColor = .bg
+        addSubview(collection)
+        return collection
+    }()
 
     init(adapter: Adapter) {
         self.adapter = adapter
         super.init(frame: .zero)
-        setupUI()
-        adapter.connect(with: collectionView)
+        setup()
     }
 
     required init?(coder: NSCoder) {
@@ -28,22 +32,17 @@ final class NewsView<Adapter: ViewAdapterProtocol>: UIView, ViewProtocol {
 
 private extension NewsView {
     
-    func setupUI() {
-        collectionView.backgroundColor = .bg
-        addSubview(collectionView)
+    func setup() {
         mapConstraint(for: collectionView)
+        adapter.connect(with: collectionView)
     }
 
     var layout: UICollectionViewLayout {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalWidth(0.7))
-        let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
-        
-        group.interItemSpacing = .fixed(15)
+        let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(250))
+        let item = NSCollectionLayoutItem(layoutSize: size)
+        let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = 15
+        section.interGroupSpacing = 35
         return UICollectionViewCompositionalLayout(section: section)
     }
 }

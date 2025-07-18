@@ -68,7 +68,7 @@ private extension NewsViewController {
     }
     
     func showWebView(with url: URL?) {
-        guard let url else { return } //?
+        guard let url else { return }
         let controller = WebViewController(url: url)
         let navigation = UINavigationController(rootViewController: controller)
         navigation.modalPresentationStyle = .fullScreen
